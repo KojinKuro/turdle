@@ -18,8 +18,11 @@ var letterKey = document.querySelector("#key-section");
 var rules = document.querySelector("#rules-section");
 var stats = document.querySelector("#stats-section");
 var gameOverBox = document.querySelector("#game-over-section");
+var gameOverMessage = document.querySelector("#game-over-message");
 var gameOverGuessCount = document.querySelector("#game-over-guesses-count");
 var gameOverGuessGrammar = document.querySelector("#game-over-guesses-plural");
+var gameOverWinText = document.querySelector("#game-over-win-text");
+var gameOverLoseText = document.querySelector("#game-over-lose-text");
 
 // Event Listeners
 window.addEventListener("load", setGame);
@@ -99,16 +102,19 @@ function clickLetter(e) {
 }
 
 function submitGuess() {
-  if (checkIsWord()) {
-    errorMessage.innerText = "";
-    compareGuess();
-    if (checkForWin()) {
-      setTimeout(declareWinner, 1000);
-    } else {
-      changeRow();
-    }
-  } else {
+  errorMessage.innerText = "";
+  if (!checkIsWord()) {
     errorMessage.innerText = "Not a valid word. Try again!";
+    return;
+  }
+
+  compareGuess();
+  if (checkForWin()) {
+    setTimeout(declareWinner, 1000);
+  } else if (checkForLoss()) {
+    setTimeout(declareLoser, 1000);
+  } else {
+    changeRow();
   }
 }
 
@@ -172,12 +178,31 @@ function checkForWin() {
   return guess === winningWord;
 }
 
+function checkForLoss() {
+  return guess !== winningWord && currentRow >= 6;
+}
+
 function changeRow() {
   currentRow++;
   updateInputPermissions();
 }
 
 function declareWinner() {
+  gameOverMessage.innerText = "Yay!";
+  gameOverWinText.classList.remove("collapsed");
+  gameOverLoseText.classList.add("collapsed");
+
+  recordGameStats();
+  changeGameOverText();
+  viewGameOverMessage();
+  setTimeout(startNewGame, 4000);
+}
+
+function declareLoser() {
+  gameOverMessage.innerText = "Woops! You lost!";
+  gameOverWinText.classList.add("collapsed");
+  gameOverLoseText.classList.remove("collapsed");
+
   recordGameStats();
   changeGameOverText();
   viewGameOverMessage();
@@ -185,7 +210,7 @@ function declareWinner() {
 }
 
 function recordGameStats() {
-  gamesPlayed.push({ solved: true, guesses: currentRow });
+  gamesPlayed.push({ solved: checkForWin(), guesses: currentRow });
 }
 
 function changeGameOverText() {
