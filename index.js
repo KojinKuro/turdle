@@ -109,10 +109,8 @@ function submitGuess() {
   }
 
   compareGuess();
-  if (checkForWin()) {
+  if (checkForWin() || checkForLoss()) {
     setTimeout(declareWinner, 1000);
-  } else if (checkForLoss()) {
-    setTimeout(declareLoser, 1000);
   } else {
     changeRow();
   }
@@ -188,21 +186,6 @@ function changeRow() {
 }
 
 function declareWinner() {
-  gameOverMessage.innerText = "Yay!";
-  gameOverWinText.classList.remove("collapsed");
-  gameOverLoseText.classList.add("collapsed");
-
-  recordGameStats();
-  changeGameOverText();
-  viewGameOverMessage();
-  setTimeout(startNewGame, 4000);
-}
-
-function declareLoser() {
-  gameOverMessage.innerText = "Woops! You lost!";
-  gameOverWinText.classList.add("collapsed");
-  gameOverLoseText.classList.remove("collapsed");
-
   recordGameStats();
   changeGameOverText();
   viewGameOverMessage();
@@ -284,6 +267,16 @@ function viewGameOverMessage() {
   gameOverBox.classList.remove("collapsed");
   letterKey.classList.add("hidden");
   gameBoard.classList.add("collapsed");
+
+  if (checkForWin()) {
+    gameOverMessage.innerText = "Yay!";
+    gameOverWinText.classList.remove("collapsed");
+    gameOverLoseText.classList.add("collapsed");
+  } else {
+    gameOverMessage.innerText = "Woops! You lost!";
+    gameOverWinText.classList.add("collapsed");
+    gameOverLoseText.classList.remove("collapsed");
+  }
 }
 
 // API Calls Function
