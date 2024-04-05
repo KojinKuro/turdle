@@ -27,16 +27,12 @@ var gameOverLoseText = document.querySelector("#game-over-lose-text");
 // Event Listeners
 window.addEventListener("load", setGame);
 
-for (var i = 0; i < inputs.length; i++) {
-  inputs[i].addEventListener("keyup", function () {
-    moveToNextInput(event);
-  });
+for (const input in inputs) {
+  input.addEventListener("keyup", (e) => moveToNextInput(e));
 }
 
-for (var i = 0; i < keyLetters.length; i++) {
-  keyLetters[i].addEventListener("click", function () {
-    clickLetter(event);
-  });
+for (const keyLetter in keyLetters) {
+  keyLetter.addEventListener("click", (e) => clickLetter(e));
 }
 
 guessButton.addEventListener("click", submitGuess);
