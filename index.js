@@ -261,6 +261,8 @@ function viewGameOverMessage() {
   gameBoard.classList.add("collapsed");
 }
 
+// API Calls Function
+
 function fetchWords() {
   return fetch("http://localhost:3001/api/v1/words")
     .then((r) => r.json())
